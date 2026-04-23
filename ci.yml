@@ -1,3 +1,4 @@
+schemaVersion: v0.2
 prepare:
   steps:
     - name: Install
@@ -5,6 +6,18 @@ prepare:
 test:
   steps: []
 run:
-  steps:
-    - name: Run
-      command: sudo -u admin n 16.18 && node index.js
+  app:
+    plan: 302
+    replicas: 1
+    network:
+      ports:
+        - port: 3000
+          isPublic: false
+      paths:
+        - port: 3000
+          path: /
+          stripPath: false
+    env: {}
+    steps:
+      - name: Run
+        command: sudo n 16.18 && node index.js
