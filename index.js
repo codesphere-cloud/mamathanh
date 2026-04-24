@@ -4,6 +4,8 @@ const mail = require('@sendgrid/mail');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const THIRTY_MINUTES = 60 * 1000 * 30;
 const PORT = 3000;
@@ -13,10 +15,22 @@ const HOST = 'https://mamathanh.de';
 
 const app = express();
 app.use(compression());
-app.use(express.static('public'));
+
+// No cache for all static files
+app.use(express.static('public', {
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+}));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('public'));
+
+const basicAuth = require('express-basic-auth')({
+    users: { 'admin': 'Linux7576' }
+});
 
 const upload = multer({dest: 'uploads/'});
 
@@ -30,7 +44,7 @@ const {raw} = require("body-parser");
 contacts.setApiKey(SENDGRID_API_KEY);
 
 const GPLACE_ID = 'ChIJw9Ivr2IHl0cRFHsg_SNRIW8';
-const GPLACES_KEY = 'AIzaSyCRPFAqXzH1w4oYxkN73urCJKgNWikOQ9c';
+const GPLACES_KEY = 'AIzaSyAHEA9Uf1vQpeH9LxiU6auNzA6RPa7bokg';
 const getGooglePlaceData = async () => {
     const url = new URL('https://maps.googleapis.com/maps/api/place/details/json');
     url.searchParams.append('place_id', GPLACE_ID)
@@ -38,7 +52,7 @@ const getGooglePlaceData = async () => {
     url.searchParams.append('language', 'de_DE');
 
     return fetch(url)
-        .then(res => res.json()).then(r => r.result)
+        .then(res => res.json()).then(r => {console.log(r); return r.result;})
 }
 
 const log = (s) => {
@@ -174,6 +188,34 @@ app.post('/api/book', upload.array(), checkFormFields(MAIL_PARAMS), async (req, 
     await addToContacts(req.body.email);
     res.status(200).end();
 })
+
+// Multer setup for file storage
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    // Define the destination folder
+    const destinationPath = path.join(__dirname, 'public');
+    // Create the folder if it doesn't exist
+    if (!fs.existsSync(destinationPath)) {
+      fs.mkdirSync(destinationPath, { recursive: true });
+    }
+    cb(null, destinationPath);
+  },
+  filename: function(req, file, cb) {
+    // Define the file name
+    cb(null, 'speisekarte1.pdf');
+  }
+});
+
+const upload1 = multer({ storage: storage });
+
+app.post('/api/upload', upload1.single('file'), (req, res) => {
+  // Handle the uploaded file
+  if (req.file) {
+    res.send('File uploaded successfully.');
+  } else {
+    res.send('File upload failed.');
+  }
+});
 
 app.get('/api/places', (req, res) => {
     res.status(200).send(placesData);

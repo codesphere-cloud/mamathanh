@@ -3,11 +3,16 @@ prepare:
   steps:
     - name: Install
       command: npm ci
+    - name: Claude Code
+      command: sudo npm install -g @anthropic-ai/claude-code
 test:
   steps: []
 run:
   app:
-    plan: 302
+    steps:
+      - name: Run
+        command: sudo n latest && node index.js
+    plan: 8
     replicas: 1
     network:
       ports:
@@ -18,6 +23,3 @@ run:
           path: /
           stripPath: false
     env: {}
-    steps:
-      - name: Run
-        command: sudo n 16.18 && node index.js

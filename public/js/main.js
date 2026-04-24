@@ -1,4 +1,27 @@
-fetch('/api/places').then(r => r.json()).then(d => {
+/* document.querySelectorAll('.weekday_text').forEach(e => {
+            e.innerHTML = `
+                        <li>
+                            Montag: Geschlossen
+                        </li>
+                        <li>
+                            Dienstag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Mittwoch: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Donnerstag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Freitag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Samstag, Sonntag & Feiertag: 13:00–23:00 Uhr
+                        </li>`
+                    
+        }); */
+
+/*fetch('/api/places').then(r => r.json()).then(d => {
     if (d.rating !== undefined) {
         document.querySelectorAll('.review-data').forEach(e => {
             e.innerText = `${d.rating} Sterne | ${d.user_ratings_total} Bewertungen`;
@@ -7,15 +30,36 @@ fetch('/api/places').then(r => r.json()).then(d => {
     const openingHours = d.opening_hours;
     if (openingHours != undefined) {
         document.querySelectorAll('.weekday_text').forEach(e => {
-            e.innerHTML = openingHours.weekday_text.map(t => `<li>${t}</li>`).join('\n')
+            e.innerHTML = `
+                        <li>
+                            Montag: Geschlossen
+                        </li>
+                        <li>
+                            Dienstag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Mittwoch: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Donnerstag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Freitag: 11:30–14:30 Uhr, 16:30–23:00 Uhr
+                        </li>
+                        <li>
+                            Samstag: 13:00–23:00 Uhr
+                        </li>
+                        <li>
+                            Sonntag: 13:00–23:00 Uhr
+                        </li>`
         });
-        /*  document.querySelectorAll('.pick-up').forEach(e => {
-              if (!openingHours.open_now) {
-                  e.classList.remove('pick-up');
-              }
-          }); */
+     //     document.querySelectorAll('.pick-up').forEach(e => {
+     //         if (!openingHours.open_now) {
+     //             e.classList.remove('pick-up');
+     //         }
+     //     }); 
     }
-});
+}); */
 
 
 (function ($) {
